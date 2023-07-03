@@ -7,6 +7,7 @@ import com.project.task.user.domain.Role;
 import com.project.task.user.domain.User;
 import com.project.task.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -108,5 +109,19 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+    }
+
+    public UserDetailsResponse getMe() {
+        var email = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return UserDetailsResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
     }
 }

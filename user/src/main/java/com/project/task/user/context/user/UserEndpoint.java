@@ -1,6 +1,7 @@
 package com.project.task.user.context.user;
 
 import com.project.task.user.context.user.dto.*;
+import com.project.task.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,35 +15,66 @@ public class UserEndpoint {
 
     private final UserService userService;
 
+    private boolean isAdmin() {
+        return userService.getMe().getRole().equals(Role.ADMIN.name());
+    }
+
+    private boolean isTheSameUser(Long id) {
+        return userService.getMe().getId().equals(id);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest request) {
-        return ResponseEntity.ok(userService.createUser(request));
+        if (isAdmin()) {
+            return ResponseEntity.ok(userService.createUser(request));
+        }
+        throw new RuntimeException("User is not authorized");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsResponse> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+        if (isAdmin() || isTheSameUser(id)) {
+            return ResponseEntity.ok(userService.getUserById(id));
+        }
+        throw new RuntimeException("User is not authorized");
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDetailsResponse>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+        if (isAdmin()) {
+            return ResponseEntity.ok(userService.getAllUsers());
+        }
+        throw new RuntimeException("User is not authorized");
     }
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<UserDetailsResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        return ResponseEntity.ok(userService.updateUser(id, request));
+        if (isAdmin() || isTheSameUser(id)) {
+            return ResponseEntity.ok(userService.updateUser(id, request));
+        }
+        throw new RuntimeException("User is not authorized");
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted successfully");
+        if (isAdmin() || isTheSameUser(id)) {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("User deleted successfully");
+        }
+        throw new RuntimeException("User is not authorized");
     }
 
     @PatchMapping("/change-password/{id}")
     public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
-        userService.changePassword(id, request);
-        return ResponseEntity.ok("Password changed successfully");
+        if (isAdmin() || isTheSameUser(id)) {
+            userService.changePassword(id, request);
+            return ResponseEntity.ok("Password changed successfully");
+        }
+        throw new RuntimeException("User is not authorized");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDetailsResponse> getMe() {
+        return ResponseEntity.ok(userService.getMe());
     }
 }

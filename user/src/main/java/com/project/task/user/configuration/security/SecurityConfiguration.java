@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -19,13 +21,18 @@ public class SecurityConfiguration {
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    private final String[] allowedUrls =  new String[]{
+            "api/auth/register",
+            "api/auth/authenticate"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/**").permitAll()
+                .requestMatchers(allowedUrls).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
