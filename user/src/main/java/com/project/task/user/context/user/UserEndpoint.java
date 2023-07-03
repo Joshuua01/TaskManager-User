@@ -1,9 +1,6 @@
 package com.project.task.user.context.user;
 
-import com.project.task.user.context.user.dto.UserDetailsResponse;
-import com.project.task.user.context.user.dto.UserRequest;
-import com.project.task.user.context.user.dto.UserResponse;
-import com.project.task.user.context.user.dto.UserUpdateRequest;
+import com.project.task.user.context.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,4 +34,15 @@ public class UserEndpoint {
         return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+
+    @PatchMapping("/change-password/{id}")
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(id, request);
+        return ResponseEntity.ok("Password changed successfully");
+    }
 }

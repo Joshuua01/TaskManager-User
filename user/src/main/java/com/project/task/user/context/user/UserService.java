@@ -2,10 +2,7 @@ package com.project.task.user.context.user;
 
 import com.project.task.user.configuration.security.JwtService;
 import com.project.task.user.context.auth.dto.AuthenticationResponse;
-import com.project.task.user.context.user.dto.UserDetailsResponse;
-import com.project.task.user.context.user.dto.UserRequest;
-import com.project.task.user.context.user.dto.UserResponse;
-import com.project.task.user.context.user.dto.UserUpdateRequest;
+import com.project.task.user.context.user.dto.*;
 import com.project.task.user.domain.Role;
 import com.project.task.user.domain.User;
 import com.project.task.user.domain.UserRepository;
@@ -93,5 +90,23 @@ public class UserService {
                 .email(updatedUser.getEmail())
                 .role(updatedUser.getRole().name())
                 .build();
+    }
+
+    public void deleteUser(Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+    }
+
+    public void changePassword(Long id, ChangePasswordRequest request) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            throw new RuntimeException("Old password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 }
