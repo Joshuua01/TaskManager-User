@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,7 +20,7 @@ public class UserEndpoint {
         return userService.getMe().getRole().equals(Role.ADMIN.name());
     }
 
-    private boolean isTheSameUser(Long id) {
+    private boolean isTheSameUser(UUID id) {
         return userService.getMe().getId().equals(id);
     }
 
@@ -32,7 +33,7 @@ public class UserEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailsResponse> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDetailsResponse> getUserById(@PathVariable UUID id) {
         if (isAdmin() || isTheSameUser(id)) {
             return ResponseEntity.ok(userService.getUserById(id));
         }
@@ -48,7 +49,7 @@ public class UserEndpoint {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<UserDetailsResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserDetailsResponse> updateUser(@PathVariable UUID id, @RequestBody UserUpdateRequest request) {
         if (isAdmin() || isTheSameUser(id)) {
             return ResponseEntity.ok(userService.updateUser(id, request));
         }
@@ -56,7 +57,7 @@ public class UserEndpoint {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         if (isAdmin() || isTheSameUser(id)) {
             userService.deleteUser(id);
             return ResponseEntity.ok("User deleted successfully");
@@ -65,7 +66,7 @@ public class UserEndpoint {
     }
 
     @PatchMapping("/change-password/{id}")
-    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<String> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordRequest request) {
         if (isAdmin() || isTheSameUser(id)) {
             userService.changePassword(id, request);
             return ResponseEntity.ok("Password changed successfully");

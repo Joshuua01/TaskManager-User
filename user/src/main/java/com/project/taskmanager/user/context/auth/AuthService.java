@@ -10,6 +10,7 @@ import com.project.taskmanager.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,9 @@ public class AuthService {
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
+        user.setLastToken(jwtToken);
+        userRepository.save(user);
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -48,8 +52,17 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         var jwtToken = jwtService.generateToken(user);
+        user.setLastToken(jwtToken);
+        userRepository.save(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public void logout() {
+        var user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setLastToken(null);
+        userRepository.save(user);
     }
 }

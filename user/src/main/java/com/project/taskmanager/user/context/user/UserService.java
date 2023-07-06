@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class UserService {
                 .build();
     }
 
-    public UserDetailsResponse getUserById(Long id) {
+    public UserDetailsResponse getUserById(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return UserDetailsResponse.builder()
@@ -64,7 +65,7 @@ public class UserService {
         return userDetailsResponses;
     }
 
-    public UserDetailsResponse updateUser(Long id, UserUpdateRequest request) {
+    public UserDetailsResponse updateUser(UUID id, UserUpdateRequest request) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -91,13 +92,13 @@ public class UserService {
                 .build();
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
     }
 
-    public void changePassword(Long id, ChangePasswordRequest request) {
+    public void changePassword(UUID id, ChangePasswordRequest request) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -120,6 +121,7 @@ public class UserService {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .lastToken(user.getLastToken())
                 .build();
     }
 }

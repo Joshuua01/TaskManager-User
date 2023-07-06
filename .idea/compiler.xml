@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="user" />
-        <module name="task" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,6 +16,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="task" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>
