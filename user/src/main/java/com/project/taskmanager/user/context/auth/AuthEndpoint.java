@@ -5,10 +5,7 @@ import com.project.taskmanager.user.context.auth.dto.AuthenticationResponse;
 import com.project.taskmanager.user.context.auth.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,5 +30,10 @@ public class AuthEndpoint {
     public ResponseEntity<String> logout() {
         authService.logout();
         return ResponseEntity.ok("User logged out!");
+    }
+
+    @GetMapping("/internal/isValidToken/{token}")
+    public ResponseEntity<Boolean> isValidToken(@PathVariable String token) {
+        return ResponseEntity.ok(authService.isValidToken(token));
     }
 }

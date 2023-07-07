@@ -111,8 +111,8 @@ public class UserService {
     }
 
     public UserDetailsResponse getMe() {
-        var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        var user = userRepository.findByEmail(email)
+        var userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return UserDetailsResponse.builder()

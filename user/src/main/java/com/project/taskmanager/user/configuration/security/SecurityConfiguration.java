@@ -20,7 +20,8 @@ public class SecurityConfiguration {
 
     private final String[] allowedUrls = new String[]{
             "api/auth/register",
-            "api/auth/authenticate"
+            "api/auth/authenticate",
+            "api/auth/internal/isValidToken/**"
     };
 
     @Bean

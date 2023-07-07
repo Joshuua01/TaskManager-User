@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -60,9 +62,15 @@ public class AuthService {
     }
 
     public void logout() {
-        var user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+        var user = userRepository.findById(UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName()))
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setLastToken(null);
         userRepository.save(user);
+    }
+
+    public boolean isValidToken(String token) {
+        User user = userRepository.findById(UUID.fromString(jwtService.extractId(token)))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return jwtService.isTokenValid(token, user);
     }
 }

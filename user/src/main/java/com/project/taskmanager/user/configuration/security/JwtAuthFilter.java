@@ -46,7 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .orElseThrow(() -> new RuntimeException("User not found"));
             if (jwtService.isTokenValid(jwt, user)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        user,
+                        user.getId(),
                         null,
                         user.getAuthorities()
                 );

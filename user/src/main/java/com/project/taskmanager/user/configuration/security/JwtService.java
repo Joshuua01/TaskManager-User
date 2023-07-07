@@ -30,7 +30,9 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
-        return generateToken(new HashMap<>(), user);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
+        return generateToken(claims, user);
     }
 
     public String generateToken(Map<String, Object> extraClaims, User user) {
