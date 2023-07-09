@@ -7,9 +7,14 @@ spring:
       ddl-auto: create-drop
     show-sql: true
   datasource:
-    url: jdbc:h2:file:C:/Users/Janeczek/Desktop/API TASK PROJECT/user/userDb
+    url: jdbc:h2:file:./user/userDb
     driver-class-name: org.h2.Driver
     username: root
     password: root
+server:
+  port: 8081
 
+secrets:
+  jwt: "GSuovz7BIEJLvLCKwfhghwx8tHfK3ee4L2K9/VPHQhI="
+  internal: "w6YT3S43OL80iP67Fu2WjC3fXD1NPQYe"
 
