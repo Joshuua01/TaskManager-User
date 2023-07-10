@@ -121,7 +121,12 @@ public class UserService {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .role(user.getRole().name())
-                .lastToken(user.getLastToken())
                 .build();
+    }
+
+    public String getUserNameById(UUID id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getFirstName() + " " + user.getLastName();
     }
 }

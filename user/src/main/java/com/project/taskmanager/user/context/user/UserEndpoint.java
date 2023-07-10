@@ -3,6 +3,7 @@ package com.project.taskmanager.user.context.user;
 import com.project.taskmanager.user.context.user.dto.*;
 import com.project.taskmanager.user.domain.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,8 @@ import java.util.UUID;
 @RequestMapping("/api/user")
 public class UserEndpoint {
 
+    @Value("${secrets.internal}")
+    private String InternalSecret;
     private final UserService userService;
 
     private boolean isAdmin() {
@@ -36,6 +39,14 @@ public class UserEndpoint {
     public ResponseEntity<UserDetailsResponse> getUserById(@PathVariable UUID id) {
         if (isAdmin() || isTheSameUser(id)) {
             return ResponseEntity.ok(userService.getUserById(id));
+        }
+        throw new RuntimeException("User is not authorized");
+    }
+
+    @GetMapping("/internal/{id}")
+    public ResponseEntity<String> getUserNameById(@PathVariable UUID id, @RequestHeader("AuthInt") String authorization) {
+        if (authorization != null && authorization.equals(InternalSecret)) {
+            return ResponseEntity.ok(userService.getUserNameById(id));
         }
         throw new RuntimeException("User is not authorized");
     }
