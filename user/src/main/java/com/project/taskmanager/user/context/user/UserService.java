@@ -28,7 +28,7 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         return UserResponse.builder()
                 .id(user.getId())

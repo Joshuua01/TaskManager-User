@@ -27,22 +27,23 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "First name cannot be empty")
+    @NotNull(message = "First name can not be empty")
     private String firstName;
 
-    @NotNull(message = "Last name cannot be empty")
+    @NotNull(message = "Last name can not be empty")
     private String lastName;
 
-    @NotNull(message = "Password cannot be empty")
+    @NotNull(message = "Password can not be empty")
     private String password;
 
     @Column(unique = true)
     @Email(message = "Email should be valid")
-    @NotNull(message = "Email cannot be empty")
+    @NotNull(message = "Email can not be empty")
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 
     private String lastToken;
 
