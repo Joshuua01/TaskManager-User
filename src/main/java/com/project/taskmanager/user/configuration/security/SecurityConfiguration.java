@@ -19,10 +19,8 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     private final String[] allowedUrls = new String[]{
-            "api/auth/register",
-            "api/auth/authenticate",
-            "api/auth/internal/isValidToken/**",
-            "api/user/internal/**",
+            "auth/**",
+            "internal/**",
             "api-docs/**",
             "swagger-ui/**"
     };

@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user")
 public class UserEndpoint {
 
     @Value("${secrets.internal}")

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: TaskManager-user-service
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -9,6 +11,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: root
     password: root
+
 server:
   port: 8081
   servlet:
@@ -17,6 +20,11 @@ server:
 springdoc:
   api-docs:
     path: /api-docs
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8083/eureka
 
 secrets:
   jwt: "GSuovz7BIEJLvLCKwfhghwx8tHfK3ee4L2K9/VPHQhI="
