@@ -22,7 +22,9 @@ public class SecurityConfiguration {
             "api/auth/register",
             "api/auth/authenticate",
             "api/auth/internal/isValidToken/**",
-            "api/user/internal/**"
+            "api/user/internal/**",
+            "api-docs/**",
+            "swagger-ui/**"
     };
 
     @Bean

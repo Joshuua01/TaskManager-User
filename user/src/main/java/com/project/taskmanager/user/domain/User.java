@@ -2,7 +2,7 @@ package com.project.taskmanager.user.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,18 +27,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "First name can not be empty")
+    @NotBlank(message = "First name can not be empty")
     private String firstName;
 
-    @NotNull(message = "Last name can not be empty")
+    @NotBlank(message = "Last name can not be empty")
     private String lastName;
 
-    @NotNull(message = "Password can not be empty")
+    @NotBlank(message = "Password can not be empty")
     private String password;
 
     @Column(unique = true)
     @Email(message = "Email should be valid")
-    @NotNull(message = "Email can not be empty")
+    @NotBlank(message = "Email can not be empty")
     private String email;
 
     @Enumerated(EnumType.STRING)
