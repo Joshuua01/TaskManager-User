@@ -2,6 +2,7 @@ package com.project.taskmanager.user.context.user;
 
 import com.project.taskmanager.user.context.user.dto.*;
 import com.project.taskmanager.user.domain.Role;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class UserEndpoint {
         return userService.getMe().getId().equals(id);
     }
 
+    @Operation(summary = "Create a new user", description = "Returns the created user")
     @PostMapping("/create")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest request) {
         if (isAdmin()) {
@@ -34,6 +36,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "Get user by id", description = "Returns the user with the given id")
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsResponse> getUserById(@PathVariable UUID id) {
         if (isAdmin() || isTheSameUser(id)) {
@@ -42,6 +45,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "INTERNAL ENDPOINT - Get user by username", description = "Returns the user with the given username")
     @GetMapping("/internal/{id}")
     public ResponseEntity<String> getUserNameById(@PathVariable UUID id, @RequestHeader("AuthInt") String authorization) {
         if (authorization != null && authorization.equals(InternalSecret)) {
@@ -50,6 +54,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "Get all users", description = "Returns all users")
     @GetMapping("/all")
     public ResponseEntity<List<UserDetailsResponse>> getAllUsers() {
         if (isAdmin()) {
@@ -58,6 +63,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "Update user", description = "Returns the updated user")
     @PatchMapping("/update/{id}")
     public ResponseEntity<UserDetailsResponse> updateUser(@PathVariable UUID id, @RequestBody UserUpdateRequest request) {
         if (isAdmin() || isTheSameUser(id)) {
@@ -66,6 +72,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "Delete user", description = "Returns a message that the user was deleted successfully")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         if (isAdmin() || isTheSameUser(id)) {
@@ -75,6 +82,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "Change password", description = "Returns a message that the password was changed successfully")
     @PatchMapping("/change-password/{id}")
     public ResponseEntity<String> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordRequest request) {
         if (isAdmin() || isTheSameUser(id)) {
@@ -84,6 +92,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
+    @Operation(summary = "Get current user", description = "Returns the current user")
     @GetMapping("/me")
     public ResponseEntity<UserDetailsResponse> getMe() {
         return ResponseEntity.ok(userService.getMe());
