@@ -72,7 +72,7 @@ public class UserEndpoint {
         throw new RuntimeException("User is not authorized");
     }
 
-    @Operation(summary = "Delete user", description = "Returns a message that the user was deleted successfully")
+    @Operation(summary = "Delete user", description = "Returns a message that if the user was deleted successfully")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         if (isAdmin() || isTheSameUser(id)) {
